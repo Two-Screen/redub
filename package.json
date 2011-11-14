@@ -1,0 +1,29 @@
+{
+    "name": "redub",
+    "description": "Redundant pub/sub",
+    "version": "0.0.1",
+    "author": "Stéphan Kochen <stephan@angrybytes.com>",
+    "keywords": ["pubsub"],
+    "license": "MIT",
+
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/AngryBytes/redub.git"
+    },
+    "private": true,
+
+    "engines": {
+        "node": ">=0.4.0"
+    },
+    "dependencies": {
+        "node-uuid": "1"
+    },
+    "devDependencies": {
+        "tap": "0.0.x"
+    },
+
+    "main": "index.js",
+    "scripts": {
+        "test": "tap test.js"
+    }
+}
