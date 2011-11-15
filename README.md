@@ -40,10 +40,10 @@ The method with which IDs are generated is also configurable:
 Redub will accept any object that quacks like an EventEmitter and implements
 the following:
 
-    * `ready` property, which must be truthy when the object is capable of
-      publishing messages at that time.
-    * `send(message)` method, which must serialize (e.g. `JSON.stringify`) the
-      message and publish it.
-    * `message(message)` event, which must be passed a deserialized message.
+ * property `ready` -  must be truthy when the object is capable of publishing
+   messages at that time.
+ * method `send(message)` - must serialize (e.g. `JSON.stringify`) the message
+   and publish it.
+ * event `message(message)` - must be passed a deserialized message.
 
  [redis-pubsub]: https://github.com/AngryBytes/redis-pubsub
