@@ -1,6 +1,6 @@
 **Redub** turns a bunch of objects implementing a simple pub/sub interface
 into a redundant pub/sub transport. It works dandy with [redis-pubsub], but
-there's no hard dependency.
+there's no hard dependency. [![Build Status](https://secure.travis-ci.org/AngryBytes/redub.png)](http://travis-ci.org/AngryBytes/redub)
 
     var pubsub = require('redis-pubsub');
     var redub = require('redub');
