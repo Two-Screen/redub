@@ -1,6 +1,6 @@
 **Redub** turns a bunch of objects implementing a simple pub/sub interface
 into a redundant pub/sub transport. It works dandy with [redis-pubsub], but
-there's no hard dependency. [![Build Status](https://secure.travis-ci.org/AngryBytes/redub.png)](http://travis-ci.org/AngryBytes/redub)
+there's no hard dependency. [![Build Status](https://secure.travis-ci.org/Two-Screen/redub.png)](http://travis-ci.org/Two-Screen/redub)
 
     var pubsub = require('redis-pubsub');
     var redub = require('redub');
@@ -46,4 +46,4 @@ the following:
    and publish it.
  * event `message(message)` - must be passed a deserialized message.
 
- [redis-pubsub]: https://github.com/AngryBytes/redis-pubsub
+ [redis-pubsub]: https://github.com/Two-Screen/redis-pubsub
