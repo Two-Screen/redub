@@ -70,6 +70,12 @@ test('manipulate channels and transports', function(t) {
     channel.add(tt1, tt3);
     t.equal(channel.transports.length, 3,
         'add multiple transports');
+    channel.reset();
+    t.equal(channel.transports.length, 0,
+        'reset to no transports');
+    channel.reset(tt1, tt2);
+    t.equal(channel.transports.length, 2,
+        'reset to two transports');
     channel.end();
     t.pass('close the channel');
 
@@ -100,6 +106,12 @@ test('manipulate channels and transports', function(t) {
     channel.add([tt1, tt3]);
     t.equal(channel.transports.length, 3,
         'add multiple transports as an array');
+    channel.reset([]);
+    t.equal(channel.transports.length, 0,
+        'reset to no transports as array');
+    channel.reset([tt1, tt2]);
+    t.equal(channel.transports.length, 2,
+        'reset to two transports as array');
     channel.end();
     t.pass('close the channel');
 

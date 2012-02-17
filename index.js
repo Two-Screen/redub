@@ -12,12 +12,10 @@ var transportArgs = function(args) {
 
 
 function Redub() {
-    this.transports = [];
-    this.uid = uuid;
-
     var self = this;
     var idsSeen = {};
     var timeout;
+    var interval = null;
 
     this.messageHandler = function(msg) {
         var uid = msg.uid;
@@ -42,15 +40,18 @@ function Redub() {
         set: function(value) {
             timeout = value;
 
-            if (this.interval)
-                clearInterval(this.interval);
+            if (interval)
+                clearInterval(interval);
 
             if (timeout > 0)
-                this.interval = setInterval(expireHandler, timeout);
+                interval = setInterval(expireHandler, timeout);
             else
-                this.interval = null;
+                interval = null;
         }
     });
+
+    this.transports = [];
+    this.uid = uuid;
     this.timeout = 10000;
 }
 util.inherits(Redub, events.EventEmitter);
@@ -81,6 +82,17 @@ Redub.prototype.remove = function() {
     });
 };
 
+Redub.prototype.reset = function() {
+    var messageHandler = this.messageHandler;
+
+    this.transports.forEach(function(transport) {
+        transport.removeListener('message', messageHandler);
+    });
+    this.transports = [];
+
+    this.add(transportArgs(arguments));
+};
+
 Redub.prototype.send = function(msg) {
     msg = { uid: this.uid(), payload: msg };
     this.transports.forEach(function(transport) {
@@ -90,14 +102,8 @@ Redub.prototype.send = function(msg) {
 };
 
 Redub.prototype.end = function() {
-    var messageHandler = this.messageHandler;
-
-    if (this.interval)
-        clearInterval(this.interval);
-
-    this.transports.forEach(function(transport) {
-        transport.removeListener('message', messageHandler);
-    });
+    this.timeout = 0;
+    this.reset();
 };
 
 
