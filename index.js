@@ -3,15 +3,23 @@ var events = require('events');
 var uuid = require('node-uuid');
 
 
-function Redub(channels) {
-    this.channels = channels;
+var channelArgs = function(args) {
+    var channels = args[0];
+    if (!Array.isArray(channels))
+        channels = Array.prototype.slice.call(args, 0);
+    return channels;
+};
+
+
+function Redub() {
+    this.channels = [];
     this.uid = uuid;
 
     var self = this;
     var idsSeen = {};
     var timeout;
 
-    var messageHandler = function(msg) {
+    this.messageHandler = function(msg) {
         var uid = msg.uid;
         if (idsSeen[uid])
             return;
@@ -44,13 +52,34 @@ function Redub(channels) {
         }
     });
     this.timeout = 10000;
-
-    this.messageHandler = messageHandler;
-    this.channels.forEach(function(channel) {
-        channel.addListener('message', messageHandler);
-    });
 }
 util.inherits(Redub, events.EventEmitter);
+
+Redub.prototype.add = function() {
+    var channels = this.channels;
+    var messageHandler = this.messageHandler;
+
+    channelArgs(arguments).forEach(function(channel) {
+        var idx = channels.indexOf(channel);
+        if (idx === -1) {
+            channel.addListener('message', messageHandler);
+            channels.push(channel);
+        }
+    });
+};
+
+Redub.prototype.remove = function() {
+    var channels = this.channels;
+    var messageHandler = this.messageHandler;
+
+    channelArgs(arguments).forEach(function(channel) {
+        var idx = channels.indexOf(channel);
+        if (idx !== -1) {
+            channel.removeListener('message', messageHandler);
+            channels.splice(idx, 1);
+        }
+    });
+};
 
 Redub.prototype.send = function(msg) {
     msg = { uid: this.uid(), payload: msg };
@@ -61,10 +90,11 @@ Redub.prototype.send = function(msg) {
 };
 
 Redub.prototype.end = function() {
+    var messageHandler = this.messageHandler;
+
     if (this.interval)
         clearInterval(this.interval);
 
-    var messageHandler = this.messageHandler;
     this.channels.forEach(function(channel) {
         channel.removeListener('message', messageHandler);
     });
@@ -72,8 +102,7 @@ Redub.prototype.end = function() {
 
 
 module.exports = function() {
-    var channels = arguments[0];
-    if (!Array.isArray(channels))
-        channels = Array.prototype.slice.call(arguments, 0);
-    return new Redub(channels);
+    var channel = new Redub();
+    channel.add(channelArgs(arguments));
+    return channel;
 };
