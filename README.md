@@ -5,10 +5,10 @@ there's no hard dependency. [![Build Status](https://secure.travis-ci.org/Two-Sc
     var pubsub = require('redis-pubsub');
     var redub = require('redub');
 
-    var channel1 = pubsub.createChannel(...);
-    var channel2 = pubsub.createChannel(...);
+    var transport1 = pubsub.createChannel(...);
+    var transport2 = pubsub.createChannel(...);
 
-    var channel = redub(channel1, channel2);
+    var channel = redub(transport1, transport2);
     channel.on('message', function(msg) {
         console.log(msg);
         channel.end();
