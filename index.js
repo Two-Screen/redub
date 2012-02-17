@@ -72,6 +72,8 @@ Redub.prototype.end = function() {
 
 
 module.exports = function() {
-    channels = Array.prototype.slice.call(arguments, 0);
+    var channels = arguments[0];
+    if (!Array.isArray(channels))
+        channels = Array.prototype.slice.call(arguments, 0);
     return new Redub(channels);
 };

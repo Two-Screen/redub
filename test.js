@@ -23,11 +23,27 @@ var tt3 = new TestTransport(200);
 
 
 test('open and close a channel', function(t) {
-    var channel = redub();
-    t.pass('open a channel');
+    var channel;
 
+    channel = redub();
+    t.pass('open a channel with no transports');
     channel.end();
-    t.pass('close a channel');
+    t.pass('close a channel with no transports');
+
+    channel = redub(tt1);
+    t.pass('open a channel with one transport');
+    channel.end();
+    t.pass('close a channel with one transport');
+
+    channel = redub(tt1, tt2, tt3);
+    t.pass('open a channel with multiple transports');
+    channel.end();
+    t.pass('close a channel with multiple transports');
+
+    channel = redub([tt1, tt2, tt3]);
+    t.pass('open a channel with multiple transports as an array');
+    channel.end();
+    t.pass('close a channel with multiple transports as an array');
 
     t.end();
 });
