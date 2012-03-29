@@ -2,7 +2,12 @@ var util = require('util');
 var events = require('events');
 var uuid = require('node-uuid');
 
-
+// Prepares transport argumenst as an Array.
+// This function can be called with an array of transports
+// of with each transport as an argument.
+//    transportArgs([arg1, arg2]);
+//    transportArgs(arg1, arg2);
+// Both will produce a single array as output
 var transportArgs = function(args) {
     var transports = args[0];
     if (!Array.isArray(transports))
@@ -10,13 +15,14 @@ var transportArgs = function(args) {
     return transports;
 };
 
-
+// Redub contructor
 function Redub() {
     var self = this;
     var idsSeen = {};
     var timeout;
     var interval = null;
 
+    // Handler function for incoming messages. This will emit a `message` event.
     this.messageHandler = function(msg) {
         var uid = msg.uid;
         if (idsSeen[uid])
@@ -56,6 +62,12 @@ function Redub() {
 }
 util.inherits(Redub, events.EventEmitter);
 
+// Add one or more transports to Redub. Transports can be provided as
+// an array, as separate arguments or as a method chain.
+//
+//  redub.add([t1, t2, t3]);
+//  redub.add(t1, t2, t3);
+//  redub.add(t1).add(t2).add(t3);
 Redub.prototype.add = function() {
     var transports = this.transports;
     var messageHandler = this.messageHandler;
@@ -67,8 +79,16 @@ Redub.prototype.add = function() {
             transports.push(transport);
         }
     });
+
+    return this;
 };
 
+// Remove on or more transports from Redub. Transports can be provided as
+// an array, as separate arguments or as a method chain.
+//
+// redub.remove([t1, t2, t3]);
+// redub.remove(t1, t2, t3);
+// redub.remove(t1).remove(t2).remove(t3);
 Redub.prototype.remove = function() {
     var transports = this.transports;
     var messageHandler = this.messageHandler;
