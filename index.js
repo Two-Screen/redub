@@ -80,8 +80,11 @@ Redub.prototype.remove = function() {
             transports.splice(idx, 1);
         }
     });
+
+    return this;
 };
 
+// Reset the Redub instance removing all transports.
 Redub.prototype.reset = function() {
     var messageHandler = this.messageHandler;
 
@@ -91,14 +94,19 @@ Redub.prototype.reset = function() {
     this.transports = [];
 
     this.add(transportArgs(arguments));
+
+    return this;
 };
 
+// Send a message over all transports.
 Redub.prototype.send = function(msg) {
     msg = { uid: this.uid(), payload: msg };
     this.transports.forEach(function(transport) {
         if (transport.ready)
             transport.send(msg);
     });
+
+    return this;
 };
 
 Redub.prototype.end = function() {
