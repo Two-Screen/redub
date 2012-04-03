@@ -34,9 +34,11 @@ function Redub() {
 
     var expireHandler = function() {
         var max = (new Date).valueOf() - timeout;
-        for (var key in idsSeen)
-            if (idsSeen[key] <= max)
+        for (var key in idsSeen) {
+            if (idsSeen[key] <= max) {
                 delete idsSeen[key];
+            }
+        }
     };
 
     Object.defineProperty(this, 'timeout', {
@@ -120,13 +122,18 @@ Redub.prototype.reset = function() {
 
 // Send a message over all transports.
 Redub.prototype.send = function(msg) {
-    msg = { uid: this.uid(), payload: msg };
+    msg = this.wrap(msg);
     this.transports.forEach(function(transport) {
         if (transport.ready)
             transport.send(msg);
     });
 
     return this;
+};
+
+// Wrap a message in an envelope
+Redub.prototype.wrap = function(msg) {
+    return { uid: this.uid(), payload: msg };
 };
 
 Redub.prototype.end = function() {
