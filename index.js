@@ -3,6 +3,9 @@ var events = require('events');
 var uuid = require('node-uuid');
 
 
+// Alias for quick access.
+var hasOwnProp = Object.prototype.hasOwnProperty;
+
 // Helper used to parse transports from an arguments list. Returns an array.
 var transportArgs = function(args) {
     var transports = args[0];
@@ -21,7 +24,7 @@ function Redub() {
     // Handler function for incoming messages. This will emit a `message` event.
     this.messageHandler = function(msg) {
         var uid = msg.uid;
-        if (idsSeen[uid])
+        if (hasOwnProp.call(idsSeen, uid))
             return;
         idsSeen[uid] = (new Date).valueOf();
 
