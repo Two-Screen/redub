@@ -3,14 +3,15 @@ var events = require('events');
 var uuid = require('node-uuid');
 
 
-// Alias for quick access.
+// Aliases for quick access.
+var arraySlice = Array.prototype.slice;
 var hasOwnProp = Object.prototype.hasOwnProperty;
 
 // Helper used to parse transports from an arguments list. Returns an array.
 var transportArgs = function(args) {
     var transports = args[0];
     if (!Array.isArray(transports))
-        transports = Array.prototype.slice.call(args, 0);
+        transports = arraySlice.call(args, 0);
     return transports;
 };
 
