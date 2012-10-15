@@ -2,20 +2,20 @@ var util = require('util');
 var events = require('events');
 var uuid = require('node-uuid');
 
-// Prepares transport argumenst as an Array.
-// This function can be called with an array of transports
-// of with each transport as an argument.
-//    transportArgs([arg1, arg2]);
-//    transportArgs(arg1, arg2);
-// Both will produce a single array as output
+
+// Aliases for quick access.
+var arraySlice = Array.prototype.slice;
+var hasOwnProp = Object.prototype.hasOwnProperty;
+
+// Helper used to parse transports from an arguments list. Returns an array.
 var transportArgs = function(args) {
     var transports = args[0];
     if (!Array.isArray(transports))
-        transports = Array.prototype.slice.call(args, 0);
+        transports = arraySlice.call(args, 0);
     return transports;
 };
 
-// Redub contructor
+
 function Redub() {
     var self = this;
     var idsSeen = {};
@@ -25,13 +25,14 @@ function Redub() {
     // Handler function for incoming messages. This will emit a `message` event.
     this.messageHandler = function(msg) {
         var uid = msg.uid;
-        if (idsSeen[uid])
+        if (hasOwnProp.call(idsSeen, uid))
             return;
         idsSeen[uid] = (new Date).valueOf();
 
         self.emit('message', msg.payload);
     };
 
+    // Periodically clean up the index of UIDs.
     var expireHandler = function() {
         var max = (new Date).valueOf() - timeout;
         for (var key in idsSeen) {
@@ -41,6 +42,7 @@ function Redub() {
         }
     };
 
+    // Control lifespan of UIDs, used to detect duplicates.
     Object.defineProperty(this, 'timeout', {
         get: function() {
             return timeout;
@@ -64,12 +66,13 @@ function Redub() {
 }
 util.inherits(Redub, events.EventEmitter);
 
-// Add one or more transports to Redub. Transports can be provided as
-// an array, as separate arguments or as a method chain.
+// Add one or more transports. Transports can be provided as an array, as
+// separate arguments or as a method chain.
 //
-//  redub.add([t1, t2, t3]);
-//  redub.add(t1, t2, t3);
-//  redub.add(t1).add(t2).add(t3);
+//     redub.add([t1, t2, t3]);
+//     redub.add(t1, t2, t3);
+//     redub.add(t1).add(t2).add(t3);
+//
 Redub.prototype.add = function() {
     var transports = this.transports;
     var messageHandler = this.messageHandler;
@@ -85,12 +88,13 @@ Redub.prototype.add = function() {
     return this;
 };
 
-// Remove on or more transports from Redub. Transports can be provided as
-// an array, as separate arguments or as a method chain.
+// Remove one or more transports. Transports can be provided as an array, as
+// separate arguments or as a method chain.
 //
-// redub.remove([t1, t2, t3]);
-// redub.remove(t1, t2, t3);
-// redub.remove(t1).remove(t2).remove(t3);
+//     redub.remove([t1, t2, t3]);
+//     redub.remove(t1, t2, t3);
+//     redub.remove(t1).remove(t2).remove(t3);
+//
 Redub.prototype.remove = function() {
     var transports = this.transports;
     var messageHandler = this.messageHandler;
@@ -106,7 +110,12 @@ Redub.prototype.remove = function() {
     return this;
 };
 
-// Reset the Redub instance removing all transports.
+// Reset the list of transports. Transports can be provided as an array, as
+// separate arguments or as a method chain.
+//
+//     redub.reset([t1, t2, t3]);
+//     redub.reset(t1, t2, t3);
+//
 Redub.prototype.reset = function() {
     var messageHandler = this.messageHandler;
 
@@ -136,12 +145,20 @@ Redub.prototype.wrap = function(msg) {
     return { uid: this.uid(), payload: msg };
 };
 
+// Detach from all transports and stop processing.
 Redub.prototype.end = function() {
     this.timeout = 0;
     this.reset();
 };
 
 
+// Create a Redub instance, with an initial set of transports. Transports can
+// be provided as an array or as separate arguments.
+//
+//     var redub = require('redub');
+//     var chan1 = redub([t1, t2, t3]);
+//     var chan2 = redub(t1, t2, t3);
+//
 module.exports = function() {
     var channel = new Redub();
     channel.add(transportArgs(arguments));
