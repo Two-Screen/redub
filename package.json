@@ -11,14 +11,11 @@
         "url": "https://github.com/Two-Screen/redub.git"
     },
 
-    "engines": {
-        "node": ">=0.4.0"
-    },
     "dependencies": {
         "node-uuid": "1"
     },
     "devDependencies": {
-        "tap": "0.2"
+        "tap": "0.4"
     },
 
     "main": "index.js",
