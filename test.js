@@ -6,7 +6,6 @@ var redub = require('./');
 
 function TestTransport(delay) {
     this.delay = delay;
-    this.ready = true;
 }
 util.inherits(TestTransport, events.EventEmitter);
 

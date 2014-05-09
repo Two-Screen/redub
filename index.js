@@ -133,8 +133,7 @@ Redub.prototype.reset = function() {
 Redub.prototype.send = function(msg) {
     msg = this.wrap(msg);
     this.transports.forEach(function(transport) {
-        if (transport.ready)
-            transport.send(msg);
+        transport.send(msg);
     });
 
     return this;
