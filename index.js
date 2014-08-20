@@ -3,9 +3,8 @@ var events = require('events');
 var uuid = require('node-uuid');
 
 
-// Aliases for quick access.
+// Alias for quick access.
 var arraySlice = Array.prototype.slice;
-var hasOwnProp = Object.prototype.hasOwnProperty;
 
 // Helper used to parse transports from an arguments list. Returns an array.
 var transportArgs = function(args) {
@@ -18,14 +17,14 @@ var transportArgs = function(args) {
 
 function Redub() {
     var self = this;
-    var idsSeen = {};
+    var idsSeen = Object.create(null);
     var timeout;
     var interval = null;
 
     // Handler function for incoming messages. This will emit a `message` event.
     this.messageHandler = function(msg) {
         var uid = msg.uid;
-        if (hasOwnProp.call(idsSeen, uid))
+        if (idsSeen[uid] !== undefined)
             return;
         idsSeen[uid] = Date.now();
 
