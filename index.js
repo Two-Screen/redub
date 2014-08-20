@@ -130,7 +130,7 @@ Redub.prototype.reset = function() {
     return this;
 };
 
-// Send a message over all transports.
+// Send a message over all transports. Returns the message ID.
 Redub.prototype.send = function(msg) {
     var id = this.uid(msg);
     msg = [id, msg];
@@ -139,7 +139,7 @@ Redub.prototype.send = function(msg) {
         transport.send(msg);
     });
 
-    return this;
+    return id;
 };
 
 // Detach from all transports and stop processing.
