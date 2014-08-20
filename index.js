@@ -27,14 +27,14 @@ function Redub() {
         var uid = msg.uid;
         if (hasOwnProp.call(idsSeen, uid))
             return;
-        idsSeen[uid] = (new Date).valueOf();
+        idsSeen[uid] = Date.now();
 
         self.emit('message', msg.payload);
     };
 
     // Periodically clean up the index of UIDs.
     var expireHandler = function() {
-        var max = (new Date).valueOf() - timeout;
+        var max = Date.now() - timeout;
         for (var key in idsSeen) {
             if (idsSeen[key] <= max) {
                 delete idsSeen[key];
