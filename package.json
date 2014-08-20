@@ -1,7 +1,7 @@
 {
     "name": "redub",
     "description": "Redundant pub/sub",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "author": "Stéphan Kochen <stephan@angrybytes.com>",
     "keywords": ["pubsub"],
     "license": "MIT",
