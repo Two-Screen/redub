@@ -23,12 +23,14 @@ function Redub() {
 
     // Handler function for incoming messages. This will emit a `message` event.
     this.messageHandler = function(msg) {
-        var uid = msg.uid;
-        if (idsSeen[uid] !== undefined)
-            return;
-        idsSeen[uid] = Date.now();
+        var id = msg[0];
+        var payload = msg[1];
 
-        self.emit('message', msg.payload);
+        if (idsSeen[id] !== undefined)
+            return;
+        idsSeen[id] = Date.now();
+
+        self.emit('message', payload);
     };
 
     // Periodically clean up the index of UIDs.
@@ -138,9 +140,9 @@ Redub.prototype.send = function(msg) {
     return this;
 };
 
-// Wrap a message in an envelope
+// Wrap a message in an envelope.
 Redub.prototype.wrap = function(msg) {
-    return { uid: this.uid(), payload: msg };
+    return [this.uid(), msg];
 };
 
 // Detach from all transports and stop processing.
