@@ -9,7 +9,7 @@ there's no hard dependency. [![Build Status](https://secure.travis-ci.org/Two-Sc
     var transport2 = pubsub.createChannel(...);
 
     var channel = redub(transport1, transport2);
-    channel.on('message', function(msg) {
+    channel.on('message', function(msg, id) {
         console.log(msg);
         channel.end();
     });
@@ -19,8 +19,7 @@ there's no hard dependency. [![Build Status](https://secure.travis-ci.org/Two-Sc
 
 Behind the scenes, messages are wrapped in an envelope with a unique ID:
 
-    { uid: '2d1222ff-e0cd-4594-a1fb-19335c98e58c',
-      payload: 'Hello world!' }
+    ['2d1222ff-e0cd-4594-a1fb-19335c98e58c','Hello world!']
 
 These IDs are tracked for a short time, and duplicates are dropped. The
 timeout is configurable:
