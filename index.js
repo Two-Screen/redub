@@ -30,7 +30,7 @@ function Redub() {
             return;
         idsSeen[id] = Date.now();
 
-        self.emit('message', payload);
+        self.emit('message', payload, id);
     };
 
     // Periodically clean up the index of UIDs.
