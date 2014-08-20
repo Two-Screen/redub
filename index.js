@@ -33,7 +33,7 @@ function Redub() {
         self.emit('message', payload, id);
     };
 
-    // Periodically clean up the index of UIDs.
+    // Periodically clean up the index of IDs.
     var expireHandler = function() {
         var max = Date.now() - timeout;
         for (var key in idsSeen) {
@@ -43,7 +43,7 @@ function Redub() {
         }
     };
 
-    // Control lifespan of UIDs, used to detect duplicates.
+    // Control lifespan of IDs, used to detect duplicates.
     Object.defineProperty(this, 'timeout', {
         get: function() {
             return timeout;
