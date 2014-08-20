@@ -9,11 +9,13 @@ there's no hard dependency. [![Build Status](https://secure.travis-ci.org/Two-Sc
     var transport2 = pubsub.createChannel(...);
 
     var channel = redub(transport1, transport2);
+
     channel.on('message', function(msg, id) {
         console.log(msg);
         channel.end();
     });
-    channel.send('Hello world!');
+
+    var id = channel.send('Hello world!');
 
 ---
 
