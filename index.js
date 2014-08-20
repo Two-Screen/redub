@@ -62,8 +62,8 @@ function Redub() {
     });
 
     this.transports = [];
-    this.uid = uuid;
-    this.timeout = 10000;
+    this.uid = exports.defaultUid;
+    this.timeout = exports.defaultTimeout;
 }
 util.inherits(Redub, events.EventEmitter);
 
@@ -142,7 +142,7 @@ Redub.prototype.send = function(msg) {
 
 // Wrap a message in an envelope.
 Redub.prototype.wrap = function(msg) {
-    return [this.uid(), msg];
+    return [this.uid(msg), msg];
 };
 
 // Detach from all transports and stop processing.
@@ -159,8 +159,16 @@ Redub.prototype.end = function() {
 //     var chan1 = redub([t1, t2, t3]);
 //     var chan2 = redub(t1, t2, t3);
 //
-module.exports = function() {
+exports = module.exports = function() {
     var channel = new Redub();
     channel.add(transportArgs(arguments));
     return channel;
 };
+
+// Default ID generator.
+exports.defaultUid = function(msg) {
+    return uuid();
+};
+
+// Default timeout.
+exports.defaultTimeout = 10000;
