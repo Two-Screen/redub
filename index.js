@@ -132,17 +132,14 @@ Redub.prototype.reset = function() {
 
 // Send a message over all transports.
 Redub.prototype.send = function(msg) {
-    msg = this.wrap(msg);
+    var id = this.uid(msg);
+    msg = [id, msg];
+
     this.transports.forEach(function(transport) {
         transport.send(msg);
     });
 
     return this;
-};
-
-// Wrap a message in an envelope.
-Redub.prototype.wrap = function(msg) {
-    return [this.uid(msg), msg];
 };
 
 // Detach from all transports and stop processing.
